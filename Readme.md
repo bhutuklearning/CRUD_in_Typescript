@@ -2,7 +2,8 @@
 # CRUD Backend in TypeScript
 
 ## Overview
-This project is a scalable backend REST API built with **Node.js**, **TypeScript**, **Express**, and **Prisma ORM** for PostgreSQL. It demonstrates a clean architecture for user authentication and post management, following best practices for modularity and maintainability.
+This project is a backend REST API built with **Node.js**, **TypeScript**, **Express**, and **Prisma ORM** for PostgreSQL. It demonstrates a clean architecture for user authentication and post management, following best practices for modularity and maintainability.
+Honestly, I am learning how to get along with typescript, prisma orm and postgresql and I thought it would be a better start.
 
 ## Features
 - User registration and login with secure password hashing (**bcryptjs**)
