@@ -25,3 +25,5 @@ coverage/
 # Editor and OS files
 .vscode/
 .DS_Store
+
+info.md
