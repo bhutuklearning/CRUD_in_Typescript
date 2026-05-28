@@ -4,26 +4,26 @@ This file mainly focuses on how to setup the project who has no idea about the s
 The steps will be be given in an sequential order where it involves commands and other things.
 
 ### Step-1: Initializing project on local system
-mkdir project
-cd project
-npm init -y
+`mkdir project`
+`cd project`
+`npm init -y`
 
 ### Step-2: Initializing project on local system
-npm install express jsonwebtoken bcryptjs dotenv cors pg morgan
+`npm install express jsonwebtoken bcryptjs dotenv cors pg morgan`
 
 #### Prisma + DB driver
-npm install @prisma/client @prisma/adapter-pg
+`npm install @prisma/client @prisma/adapter-pg`
 
 #### For Dev Only:
-npm install -D typescript tsx @types/node nodemon prisma 
+`npm install -D typescript tsx @types/node nodemon prisma`
 
-npm install -D @types/express @types/jsonwebtoken @types/bcryptjs @types/cors  @types/pg @types/morgan
+`npm install -D @types/express @types/jsonwebtoken @types/bcryptjs @types/cors  @types/pg @types/morgan`
 
 ### Step-3: Generate tsconfig.json:
-npx tsc --init
+`npx tsc --init`
 
 ### Step-4: Updating tsconfig.json file(Fully upto You):
-{
+```{
   "compilerOptions": {
     //"rootDir": "./src",
     "outDir": "./dist",
@@ -38,9 +38,10 @@ npx tsc --init
     "ignoreDeprecations": "6.0"
   }
 }
+```
 
 ### Step-5: Initialize Prisma:
-npx prisma init
+`npx prisma init`
 
 This creates two things:
 prisma/schema.prisma
@@ -48,6 +49,7 @@ prisma/schema.prisma
 
 ### Step-6: Implement prisma.schema:
 prisma/schema.prisma:
+```
 generator client {
   provider     = "prisma-client-js"
   output       = "../generated/prisma"
@@ -76,13 +78,14 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+```
 
 ### Step-7: Run Migration & Generate Client:
 
-npx prisma migrate dev --name init
+`npx prisma migrate dev --name init`
 (Creates the actual tables in your Neon PostgreSQL database)
 
-npx prisma generate
+`npx prisma generate`
 (Generates the TypeScript client from your schema)
 
 ### Note:
