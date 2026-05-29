@@ -1,137 +1,203 @@
+# Advanced TypeScript CRUD Backend API
 
-# CRUD Backend in TypeScript
+[![TypeScript](https://img.shields.io/badge/TypeScript-v6.0+-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-v16+-green?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-v5.2+-lightgrey?logo=express&logoColor=white)](https://expressjs.com/)
+[![Prisma ORM](https://img.shields.io/badge/Prisma-v7.8+-10354c?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Zod](https://img.shields.io/badge/Zod-v4.4+-purple?logo=zod&logoColor=white)](https://zod.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14+-blue?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-## Overview
-This project is a backend REST API built with **Node.js**, **TypeScript**, **Express**, and **Prisma ORM** for PostgreSQL. It demonstrates a clean architecture for user authentication and post management, following best practices for modularity and maintainability.
-Honestly, I am learning how to get along with typescript, prisma orm and postgresql and I thought it would be a better start.
+An enterprise-grade, secure, and type-safe REST API boilerplate featuring cookie-based JWT authentication, rate limiting, payload validation, database connection pooling, and standard modular architecture. Built using TypeScript, Express, Prisma ORM, PostgreSQL, and Zod.
+
+---
 
 ## Features
-- User registration and login with secure password hashing (**bcryptjs**)
-- JWT-based authentication and route protection
-- CRUD operations for posts (create, read, update, delete)
-- Middleware for authentication, logging (**morgan**), and CORS
-- Modular structure with controllers, routes, and middlewares
-- Environment variable management with **dotenv**
-- Prisma ORM for database access and migrations
 
-## Prerequisites
-- Node.js v16 or higher
-- PostgreSQL
-- npm or yarn
+- **Dual-Token Cookie Authentication**: 
+  - Implementation of short-lived Access Tokens (15 min) and long-lived Refresh Tokens (7 days) stored securely in client-side HttpOnly, SameSite (Strict) cookies to protect against XSS and CSRF attacks.
+  - Access Token rotation via dedicated Refresh endpoints and secure session clearing on logout.
+- **Multi-Level Rate Limiting**:
+  - General rate limiting for the entire API (100 requests per 15 minutes).
+  - Strict authentication limiters (10 register/login attempts per 15 minutes) to protect against brute-force attacks.
+- **Robust Payload Validation**:
+  - Input filtering using Zod schema parser.
+  - Custom validation middleware that catches errors and returns structured, flattened client-facing field feedback.
+- **Prisma ORM & Connection Pooling**:
+  - Out-of-the-box support for PostgreSQL connection pooling utilizing `pg` Pool and `@prisma/adapter-pg` driver.
+  - Schema configuration set to output Prisma client into a custom isolated directory (`generated/prisma`) to keep dependency trees tidy.
+- **ESM Native Environment**:
+  - Full configuration for ESModules (`"type": "module"`).
+  - Modern TypeScript development environment using `tsx` (TypeScript Execute) for lightning-fast hot reloading without compiler lags.
 
-## Getting Started
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/bhutuklearning/CRUD_in_Typescript.git
-   cd final_project
-   ```
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Configure environment variables:**
-   - Copy `.env.sample` to `.env` and fill in your values (e.g., `DATABASE_URL`, `PORT`, `JWT_SECRET`).
-4. **Apply database migrations:**
-   ```bash
-   npx prisma migrate dev
-   ```
-5. **Generate Prisma client:**
-   ```bash
-   npx prisma generate
-   ```
-6. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+## Tech Stack & Dependencies
 
-## Usage
-- **Development:** `npm run dev`
-- **Production:** `npm run build` then `npm start`
+- **Runtime & Compilation**: Node.js (v16+), TypeScript (v6+), TSX
+- **Web Framework**: Express 5
+- **Database / ORM**: PostgreSQL, Prisma ORM
+- **Security & Utilities**: bcryptjs, jsonwebtoken, cookie-parser, express-rate-limit, cors, morgan, dotenv
+- **Data Validation**: Zod
 
-## API Endpoints
+---
 
-### Auth
-- `POST /api/auth/register` — Register a new user
-- `POST /api/auth/login` — Login and receive a JWT
+## Environment Variables
 
-### Posts (Protected)
-- `GET /api/posts` — List all posts
-- `GET /api/posts/:id` — Get a single post
-- `POST /api/posts` — Create a new post
-- `PUT /api/posts/:id` — Update a post (author only)
-- `DELETE /api/posts/:id` — Delete a post (author only)
+Create a `.env` file in the root folder. You can copy the sample configuration from `.env.sample`.
 
-### Health
-- `GET /health` — Health check endpoint
+```ini
+PORT=3000
+DATABASE_URL="postgresql://username:password@host:port/database_name?sslmode=require"
+NODE_ENV="development" # or "production"
+JWT_SECRET="your_jwt_secret_key" # Check fallback used in auth controllers
+ACCESS_TOKEN_SECRET="your_access_token_secret" # Secret used for signing short-term JWT
+REFRESH_TOKEN_SECRET="your_refresh_token_secret" # Secret used for signing long-term JWT
+```
+
+---
 
 ## Project Structure
+
 ```
 final_project/
-├── .env
-├── .env.sample
-├── .gitignore
-├── package.json
-├── prisma.config.ts
-├── Readme.md
-├── tsconfig.json
-├── generated/
-│   └── prisma/
-│       ├── client.d.ts
-│       ├── client.js
-│       ├── ...
-├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
-│       ├── migration_lock.toml
-│       └── 20260528074117_init/
-│           └── migration.sql
-├── src/
-│   ├── index.ts           # Entry point
-│   ├── lib/
-│   │   └── prisma.ts      # Prisma client setup
-│   ├── controllers/
-│   │   ├── authController.ts
-│   │   └── postController.ts
-│   ├── middlewares/
-│   │   └── auth.ts        # JWT authentication middleware
-│   └── routes/
-│       ├── authRoutes.ts
-│       └── postRoutes.ts
+├── .env.sample                  # Sample environment configuration template
+├── .gitignore                   # Standard git untracked file template
+├── package.json                 # Project configuration and dependency manifest
+├── prisma.config.ts             # Prisma environment config loader
+├── Readme.md                    # Project documentation
+├── Steps.md                     # Step-by-step setup overview
+├── tsconfig.json                # TypeScript compiler rules
+├── API_testing_proof/           # Postman Collection folder
+│   └── 1st_version_testing.postman_collection.json
+├── generated/                   # Autogenerated Prisma client exports
+│   └── prisma/                  
+├── prisma/                      
+│   ├── schema.prisma            # Prisma schema models & relations
+│   └── migrations/              # Database schema migrations
+└── src/                         # Application source files
+    ├── index.ts                 # Server entrypoint and middleware assembly
+    ├── controllers/             # Request handlers
+    │   ├── authController.ts    # Authentication: register, login, refresh, logout
+    │   └── postController.ts    # Post operations: CRUD with author relations
+    ├── lib/                     
+    │   └── prisma.ts            # PostgreSQL Client Pool & Prisma instantiation
+    ├── middlewares/             # Request filters & interceptors
+    │   ├── auth.ts              # Authentication & JWT session verification
+    │   ├── rateLimiter.ts       # Rate limiter rules (API and Auth)
+    │   └── validate.ts          # Zod schema validation middleware
+    ├── routes/                  # Express Router routes mapping
+    │   ├── authRoutes.ts        
+    │   └── postRoutes.ts        
+    └── validators/              # Zod validation schema rules
+        ├── authSchemas.ts       # Login and register constraints
+        └── postSchemas.ts       # Post title & content constraints
 ```
+
+---
 
 ## Database Schema
 
-### User
-| Field      | Type     | Attributes          |
-|------------|----------|---------------------|
-| id         | Int      | Primary Key         |
-| email      | String   | Unique              |
-| password   | String   |                     |
-| posts      | Post[]   | Relation to `Post`  |
-| createdAt  | DateTime | Default: `now()`    |
+The database uses PostgreSQL managed by Prisma with the following schema design:
 
-### Post
-| Field      | Type     | Attributes                          |
-|------------|----------|-------------------------------------|
-| id         | Int      | Primary Key                         |
-| title      | String   |                                     |
-| content    | String   |                                     |
-| authorId   | Int      | Foreign Key to `User`               |
-| author     | User     | Relation to `User`                  |
-| createdAt  | DateTime | Default: `now()`                    |
-| updatedAt  | DateTime | Auto-updated on modification        |
+### User Model
+| Field | Type | Attributes | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `Int` | `@id`, `@default(autoincrement())` | Primary key |
+| `email` | `String` | `@unique` | User login email address |
+| `password` | `String` | | Hashed security password |
+| `posts` | `Post[]` | Relation | Database 1-to-many relationship with `Post` |
+| `createdAt` | `DateTime` | `@default(now())` | Creation timestamp |
 
-## Environment Variables
-See `.env.sample` for required variables:
-- `PORT` — Port to run the server
-- `DATABASE_URL` — PostgreSQL connection string
-- `JWT_SECRET` — Secret for signing JWTs
+### Post Model
+| Field | Type | Attributes | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `Int` | `@id`, `@default(autoincrement())` | Primary key |
+| `title` | `String` | | Post title (Min 3 chars) |
+| `content` | `String` | | Post body/content (Min 10 chars) |
+| `authorId` | `Int` | Foreign Key | Relates to `User.id` |
+| `author` | `User` | Relation | Database relationship mapping to user account |
+| `createdAt` | `DateTime` | `@default(now())` | Creation timestamp |
+| `updatedAt` | `DateTime` | `@updatedAt` | Automatic update timestamp |
 
-## Technologies Used
-- Node.js, TypeScript, Express
-- Prisma ORM, PostgreSQL
-- JWT, bcryptjs, dotenv, morgan, cors
+---
+
+## API Endpoints Reference
+
+### Authentication (`/api/auth`)
+| Method | Endpoint | Authentication | Rate Limiting | Validation | Description |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `POST` | `/api/auth/register` | None | Strict (10/15m) | `registerSchema` | Registers a new User, hashing password with bcrypt. |
+| `POST` | `/api/auth/login` | None | Strict (10/15m) | `loginSchema` | Authenticates User, sets access & refresh tokens in HttpOnly cookies. |
+| `POST` | `/api/auth/refreshAccessToken` | None | General (100/15m) | None | Validates refreshToken cookie, rotates/issues new accessToken cookie. |
+| `POST` | `/api/auth/logout` | None | General (100/15m) | None | Clears all authentication cookies stored on the client. |
+
+### Posts (`/api/posts`)
+| Method | Endpoint | Authentication | Rate Limiting | Validation | Description |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `GET` | `/api/posts` | Required (JWT) | General (100/15m) | None | Lists all posts with details and author email references. |
+| `GET` | `/api/posts/:id` | Required (JWT) | General (100/15m) | None | Retrieves detailed payload of a single post by its ID. |
+| `POST` | `/api/posts` | Required (JWT) | General (100/15m) | `createPostSchema` | Generates a new post associated with the authenticated user. |
+| `PUT` | `/api/posts/:id` | Required (JWT) | General (100/15m) | None | Modifies target post attributes (Restricted to post's Author). |
+| `DELETE` | `/api/posts/:id` | Required (JWT) | General (100/15m) | None | Deletes target post entirely from DB (Restricted to post's Author). |
+
+### System Diagnostics
+| Method | Endpoint | Authentication | Description |
+| :--- | :--- | :---: | :--- |
+| `GET` | `/` | None | Returns a plain status text confirming server state. |
+| `GET` | `/health` | None | Outputs status JSON (`{ "message": "API is running" }`). |
+
+---
+
+## Getting Started
+
+Follow these steps to run the project locally.
+
+### 1. Clone & Install
+```bash
+# Clone the repository
+git clone https://github.com/bhutuklearning/CRUD_in_Typescript.git
+cd final_project
+
+# Install dependencies
+npm install
+```
+
+### 2. Configure Environment
+Create a `.env` file using the configuration template shown in the Environment Variables section.
+
+### 3. Database Migration & Client Generation
+Ensure your PostgreSQL database is running, then execute:
+```bash
+# Create migration history and apply tables to PostgreSQL database
+npx prisma migrate dev --name init
+
+# Generate the custom TypeScript Prisma Client
+npx prisma generate
+```
+
+### 4. Run Application
+Use the npm scripts to run or bundle the API server:
+```bash
+# Start development server with TSX Watch (hot reload enabled)
+npm run dev
+
+# Compile TypeScript to JavaScript build folder (/dist)
+npm run build
+
+# Run compiled build using production entrypoint
+npm run start
+```
+
+---
+
+## Testing with Postman
+
+A preconfigured Postman collection is available under the [API_testing_proof](file:///c:/Users/amrit/Desktop/Scalable%20Backend%20in%20Nodejs/12_CRUD_in_TS/final_project/API_testing_proof) directory:
+- [1st_version_testing.postman_collection.json](file:///c:/Users/amrit/Desktop/Scalable%20Backend%20in%20Nodejs/12_CRUD_in_TS/final_project/API_testing_proof/1st_version_testing.postman_collection.json)
+
+Import this collection into Postman to easily query endpoints, test validation patterns, verify rate limit headers, and validate authentication cookie rotations.
+
+---
 
 ## License
-This project is licensed under the ISC License.
+This project is licensed under the **ISC License**.
