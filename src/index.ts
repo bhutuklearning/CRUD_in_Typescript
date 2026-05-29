@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma.js";
+import { apiLimiter } from "./middlewares/rateLimiter.js";
 
 import authRoutes from './routes/authRoutes.js';
 import postRoutes from './routes/postRoutes.js';
@@ -18,6 +19,8 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+// RATE LIMITER
+app.use(apiLimiter);
 
 // Default route to check if server is running
 app.get("/", (req, res) => {
