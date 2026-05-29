@@ -11,7 +11,7 @@ export const protect = (
   res: Response,
   next: NextFunction
 ): void => {
-  const token = req.cookies.token;
+  const token = req.cookies.accessToken;
 
   if (!token) {
     res.status(401).json({ message: 'No token provided' });
@@ -19,8 +19,8 @@ export const protect = (
   }
 
   try {
-    const secret = process.env['JWT_SECRET'];
-    if (!secret) throw new Error('JWT_SECRET not set in environment');
+    const secret = process.env['ACCESS_TOKEN_SECRET'];
+    if (!secret) throw new Error('ACCESS_TOKEN_SECRET not set in environment');
 
     const decoded = jwt.verify(token, secret) as {
       userId: number;
