@@ -11,8 +11,7 @@ export const protect = (
   res: Response,
   next: NextFunction
 ): void => {
-  // Token comes in as: Authorization: Bearer <token>
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.cookies.token;
 
   if (!token) {
     res.status(401).json({ message: 'No token provided' });
@@ -23,7 +22,10 @@ export const protect = (
     const secret = process.env['JWT_SECRET'];
     if (!secret) throw new Error('JWT_SECRET not set in environment');
 
-    const decoded = jwt.verify(token, secret) as { userId: number };
+    const decoded = jwt.verify(token, secret) as {
+      userId: number;
+    };
+
     req.userId = decoded.userId;
     next();
   } catch {

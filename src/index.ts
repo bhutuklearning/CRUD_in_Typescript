@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import { prisma } from "./lib/prisma.js";
 
 import authRoutes from './routes/authRoutes.js';
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser());
 
 // Default route to check if server is running
 app.get("/", (req, res) => {

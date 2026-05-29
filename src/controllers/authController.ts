@@ -46,7 +46,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     if (!secret) throw new Error('JWT_SECRET not set in environment');
 
     // Sign and return JWT
-    const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '7d' });
+    // const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '7d' });
 
-    res.json({ token });
+    // res.json({ token });
+    const token = jwt.sign(
+        { userId: user.id },
+        secret,
+        { expiresIn: "7d" }
+    );
+
+    // Store token inside cookie
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
+        message: "Login successful",
+    });
+};
+
+// POST /api/auth/logout
+export const logout = async (
+    _req: Request,
+    res: Response
+): Promise<void> => {
+
+    res.clearCookie("token");
+
+    res.json({
+        message: "Logged out successfully",
+    });
 };
