@@ -4,7 +4,7 @@ import {
     fastRoute,
     slowRoute,
     cpuHeavyRoute,
-    // dbHeavyRoute,
+    dbHeavyRoute,
 } from "../controllers/performanceController.js";
 
 const router = Router();
@@ -12,6 +12,6 @@ const router = Router();
 router.get("/fast", fastRoute);
 router.get("/slow", slowRoute);
 router.get("/cpu-heavy", cpuHeavyRoute);
+router.get("/db-heavy", dbHeavyRoute);
 
-// router.get("/db-heavy", dbHeavyRoute);
 export default router;

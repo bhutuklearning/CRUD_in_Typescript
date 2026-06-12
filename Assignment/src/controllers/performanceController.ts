@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { prisma } from "../lib/prisma.js"
 
 export const fastRoute = async (
     _req: Request,
@@ -49,3 +50,23 @@ export const cpuHeavyRoute = async (
     });
 };
 
+// DB HEAVY ROUTE
+export const dbHeavyRoute = async (
+    _req: Request,
+    res: Response
+): Promise<void> => {
+    const start = performance.now();
+    // Multiple DB queries
+    const users1 = await prisma.user.findMany();
+    const users2 = await prisma.user.findMany();
+    const users3 = await prisma.user.findMany();
+
+    res.json({
+        totalUsers:
+            users1.length +
+            users2.length +
+            users3.length,
+
+        latency: `${performance.now() - start} ms`,
+    });
+};
