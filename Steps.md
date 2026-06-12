@@ -16,7 +16,6 @@ The steps will be be given in an sequential order where it involves commands and
 
 #### For Dev Only:
 `npm install -D typescript tsx @types/node nodemon prisma`
-
 `npm install -D @types/express @types/jsonwebtoken @types/bcryptjs @types/cors  @types/pg @types/morgan`
 
 ### Step-3: Generate tsconfig.json:
