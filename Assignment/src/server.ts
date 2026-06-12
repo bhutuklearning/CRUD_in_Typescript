@@ -4,7 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
-import { apiLimiter } from "./middleware/rateLimit";
+import { apiLimiter } from "./middleware/rateLimit.js";
 import performanceRoutes from "./routes/performanceRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
