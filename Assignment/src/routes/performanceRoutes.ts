@@ -6,12 +6,13 @@ import {
     cpuHeavyRoute,
     dbHeavyRoute,
 } from "../controllers/performanceController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/fast", fastRoute);
-router.get("/slow", slowRoute);
-router.get("/cpu-heavy", cpuHeavyRoute);
-router.get("/db-heavy", dbHeavyRoute);
+router.get("/fast", protect, fastRoute);
+router.get("/slow", protect, slowRoute);
+router.get("/cpu-heavy", protect, cpuHeavyRoute);
+router.get("/db-heavy", protect, dbHeavyRoute);
 
 export default router;

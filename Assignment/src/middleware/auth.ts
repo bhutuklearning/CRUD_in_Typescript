@@ -30,5 +30,3 @@ export const protect = (
         res.status(401).json({ message: 'Invalid or expired token' });
     }
 };
-
-// This file can be used for later use cases when we modify the current schema.
